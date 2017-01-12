@@ -45,12 +45,12 @@ parameters:
           - ${_param:kubernetes_control_node03_hostname}
           - ${_param:kubernetes_control_node03_hostname}.${_param:cluster_domain}
         cmp01:
-          address: ${_param:kubernetes_compute_node01_control_address}
+          address: ${_param:kubernetes_compute_node01_single_address}
           names:
           - ${_param:kubernetes_compute_node01_hostname}
           - ${_param:kubernetes_compute_node01_hostname}.${_param:cluster_domain}
         cmp02:
-          address: ${_param:kubernetes_compute_node02_control_address}
+          address: ${_param:kubernetes_compute_node02_single_address}
           names:
           - ${_param:kubernetes_compute_node02_hostname}
           - ${_param:kubernetes_compute_node02_hostname}.${_param:cluster_domain}

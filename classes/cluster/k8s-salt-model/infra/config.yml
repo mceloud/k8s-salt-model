@@ -2,10 +2,10 @@ classes:
 - system.linux.system.repo.tcp_salt
 - system.openssh.client.lab
 - system.salt.master.pkg
-- system.salt.master.formula.git.foundation
+- system.salt.master.formula.git.saltstack
+- system.salt.master.formula.git.kubernetes
 - system.salt.minion.pki.authority
 - system.reclass.storage.salt
-- system.reclass.storage.system.physical_control_cluster
 - system.salt.master.git
 - cluster.k8s-salt-model
 parameters:
