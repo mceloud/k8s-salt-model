@@ -1,0 +1,56 @@
+
+parameters:
+  _param:
+    kubernetes_admin_user: admin
+    kubernetes_admin_password: WWWWWWWWWWWWWWWW
+    kubernetes_admin_token: WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+    kubernetes_kubelet_token: WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+    kubernetes_kube-proxy_token: WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+    kubernetes_scheduler_token: WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+    kubernetes_controller-manager_token: WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+    kubernetes_dns_token: WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+    etcd_initial_token: WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+    kubernetes_internal_api_address: 10.254.0.1
+    cluster_vip_address: ${_param:kubernetes_control_address}
+    cluster_local_address: ${_param:single_address}
+    cluster_node01_hostname: ${_param:kubernetes_control_node01_hostname}
+    cluster_node01_address: ${_param:kubernetes_control_node01_address}
+    cluster_node02_hostname: ${_param:kubernetes_control_node02_hostname}
+    cluster_node02_address: ${_param:kubernetes_control_node02_address}
+    cluster_node03_hostname: ${_param:kubernetes_control_node03_hostname}
+    cluster_node03_address: ${_param:kubernetes_control_node03_address}
+    calico_private_network: 192.168.0.0
+    calico_private_netmask: 16
+  linux:
+    network:
+      host:
+        ctl:
+          address: ${_param:kubernetes_control_address}
+          names:
+          - ${_param:kubernetes_control_hostname}
+          - ${_param:kubernetes_control_hostname}.${_param:cluster_domain}
+        ctl01:
+          address: ${_param:kubernetes_control_node01_address}
+          names:
+          - ${_param:kubernetes_control_node01_hostname}
+          - ${_param:kubernetes_control_node01_hostname}.${_param:cluster_domain}
+        ctl02:
+          address: ${_param:kubernetes_control_node02_address}
+          names:
+          - ${_param:kubernetes_control_node02_hostname}
+          - ${_param:kubernetes_control_node02_hostname}.${_param:cluster_domain}
+        ctl03:
+          address: ${_param:kubernetes_control_node03_address}
+          names:
+          - ${_param:kubernetes_control_node03_hostname}
+          - ${_param:kubernetes_control_node03_hostname}.${_param:cluster_domain}
+        cmp01:
+          address: ${_param:kubernetes_compute_node01_control_address}
+          names:
+          - ${_param:kubernetes_compute_node01_hostname}
+          - ${_param:kubernetes_compute_node01_hostname}.${_param:cluster_domain}
+        cmp02:
+          address: ${_param:kubernetes_compute_node02_control_address}
+          names:
+          - ${_param:kubernetes_compute_node02_hostname}
+          - ${_param:kubernetes_compute_node02_hostname}.${_param:cluster_domain}

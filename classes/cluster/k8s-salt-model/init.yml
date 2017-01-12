@@ -1,0 +1,49 @@
+# Address plan covered at:
+# https://docs.google.com/spreadsheets/d/17jhct4awbaoXVKp7_SdCbS-DBlikB6oEMb3gzLI4By8/edit#gid=0
+classes:
+- system.linux.system.single
+- system.openssh.server.team.tcpcloud
+- cluster.k8s-salt-model.infra
+- cluster.k8s-salt-model.kubernetes
+parameters: 
+  _param:
+    cluster_domain: k8s-salt-model.mirantis.local
+    reclass_data_revision: master
+    cluster_name: k8s-salt-model
+
+    # cert parameters
+    salt_minion_ca_host: ${_param:infra_config_hostname}.${_param:cluster_domain}
+    salt_minion_ca_authority: kubernetes
+
+    # infra service addresses
+    infra_config_address: 172.16.10.100
+    infra_config_deploy_address: 192.168.10.100
+
+    # node hostnames
+    kubernetes_compute_node01_hostname: cmp01
+    kubernetes_compute_node02_hostname: cmp02
+    kubernetes_control_node01_hostname: ctl01
+    kubernetes_control_node02_hostname: ctl02
+    kubernetes_control_node03_hostname: ctl03
+    kubernetes_control_hostname: ctl
+
+    # kubernetes deploy addresses
+    kubernetes_control_node01_deploy_address: 192.168.10.101
+    kubernetes_control_node02_deploy_address: 192.168.10.102
+    kubernetes_control_node03_deploy_address: 192.168.10.103
+    kubernetes_compute_node01_deploy_address: 192.168.10.105
+    kubernetes_compute_node02_deploy_address: 192.168.10.106
+
+    # kubernetes service addresses
+    kubernetes_control_address: 172.16.10.253
+    kubernetes_control_node01_address: 172.16.10.101
+    kubernetes_control_node02_address: 172.16.10.102
+    kubernetes_control_node03_address: 172.16.10.103
+
+    # kubernetes compute
+    kubernetes_compute_node01_single_address: 172.16.10.105
+    kubernetes_compute_node02_single_address: 172.16.10.106
+
+    ##FIXME if ntp defined
+    #ntp_strata_host1: 
+    #ntp_strata_host2: 
