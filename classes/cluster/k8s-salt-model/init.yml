@@ -7,7 +7,7 @@ classes:
 - cluster.k8s-salt-model.kubernetes
 parameters: 
   _param:
-    cluster_domain: k8s-salt-model.mirantis.local
+    cluster_domain: mcp-fuel-aio.local
     reclass_data_revision: master
     cluster_name: k8s-salt-model
 
