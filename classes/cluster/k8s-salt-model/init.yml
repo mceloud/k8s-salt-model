@@ -47,3 +47,10 @@ parameters:
     ##FIXME if ntp defined
     #ntp_strata_host1: 
     #ntp_strata_host2: 
+  linux:
+    network:
+      interface:
+        eth1:
+          enabled: true
+          type: eth
+          proto: dhcp

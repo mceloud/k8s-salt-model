@@ -54,3 +54,19 @@ parameters:
           names:
           - ${_param:kubernetes_compute_node02_hostname}
           - ${_param:kubernetes_compute_node02_hostname}.${_param:cluster_domain}
+      resolv:
+        dns:
+          - 172.18.176.4 
+          - 172.18.176.5
+        domain: k8s-salt-model.mirantis.local 
+        search:
+          - bud.mirantis.net 
+          - scc.mirantis.net 
+          - vm.mirantis.net 
+          - ssl.mirantis.net 
+          - msk.mirantis.net 
+          - srt.mirantis.net
+        options:
+          - ndots:5
+          - timeout:2
+          - attempts:2
