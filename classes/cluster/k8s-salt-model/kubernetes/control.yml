@@ -2,7 +2,7 @@ classes:
 - service.etcd.server.cluster
 - system.haproxy.proxy.listen.kubernetes.etcd
 - system.linux.system.repo.docker
-- system.salt.minion.pki.k8s_server_certificate.yml
+- system.salt.minion.pki.k8s_server_certificate
 - cluster.k8s-salt-model
 parameters:
   _param:

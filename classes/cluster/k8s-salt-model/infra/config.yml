@@ -2,11 +2,9 @@ classes:
 - system.linux.system.repo.tcp_salt
 - system.openssh.client.lab
 - system.salt.master.pkg
-- system.salt.master.formula.git.saltstack
-- system.salt.master.formula.git.kubernetes
 - system.salt.minion.pki.authority
 - system.reclass.storage.salt
-- system.salt.master.git
+- system.reclass.storage.system.kubernetes_control_cluster
 - cluster.k8s-salt-model
 parameters:
   _param:
@@ -17,6 +15,7 @@ parameters:
     single_address: ${_param:infra_config_address}
     deploy_address: ${_param:infra_config_deploy_address}
     salt_master_host: ${_param:infra_config_address}
+    linux_system_codename: xenial
   reclass:
     storage:
       node:
