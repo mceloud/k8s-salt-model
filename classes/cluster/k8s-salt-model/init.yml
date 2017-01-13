@@ -13,7 +13,7 @@ parameters:
 
     # cert parameters
     salt_minion_ca_host: ${_param:infra_config_hostname}.${_param:cluster_domain}
-    salt_minion_ca_authority: kubernetes
+    salt_minion_ca_authority: salt_master_ca
 
     # infra service addresses
     infra_config_address: 172.16.10.100
@@ -51,7 +51,9 @@ parameters:
   linux:
     network:
       interface:
-        eth1:
+        ens4:
           enabled: true
           type: eth
-          proto: dhcp
+          proto: static
+          address: ${_param:single_address}
+          netmask: 255.255.255.0
