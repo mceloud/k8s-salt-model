@@ -20,7 +20,7 @@ parameters:
 #          - /srv/calico/custom_filters.cfg:/etc/calico/confd/config/custom_filters.cfg
     common:
       hyperkube:
-        image: docker-prod-virtual.docker.mirantis.net/mirantis/kubernetes/hyperkube-amd64:v1.4.6-6
+        image: docker-prod-virtual.docker.mirantis.net/mirantis/kubernetes/hyperkube-amd64:v1.5.1-2
 ##FIXME
  # linux:
  #   network:
