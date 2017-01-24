@@ -21,6 +21,8 @@ parameters:
     opencontrail_docker_database: tcpcloud/opencontrail-3.0-database
     opencontrail_docker_database_tag: latest
     rabbitmq_service_host: 10.254.0.11
+    rabbitmq_service_host01: 10.254.0.11
+    opencontrail_version: 3.0
     opencontrail_replicas: 1
     rabbitmq_hostname_node01: rabbitmq-server-node01
     openstack_rabbitmq_tag: latest
@@ -49,6 +51,7 @@ parameters:
     rabbitmq_openstack_password: password
   kubernetes:
     control:
+      enabled: True
       config_type: configmap
       configmap:
         rabbitmq-server:
