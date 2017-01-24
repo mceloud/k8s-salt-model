@@ -1,0 +1,106 @@
+parameters:
+  kubernetes:
+    control:
+      configmap:
+        opencontrail-control:
+          version: ${_param:contrail_control_config_version}
+      service:
+        contrail-control:
+          enabled: true
+#          service: opencontrail
+          service: opencontrail
+          namespace: default
+          cluster: opencontrail
+          affinity:
+            anti_affinity:
+              name: podAntiAffinity
+              expression:
+                label_selector:
+                  name: labelSelector
+                  selectors:
+                  - key: app
+                    value: opencontrail-control
+              topology_key: kubernetes.io/hostname
+          ports:
+          - port: 8083
+            name: control
+          - port: 53
+            name: named
+          - port: 5269
+            name: xmpp
+          - port: 8092
+            name: dns-introspect
+          - port: 8093
+            name: dns-xmpp
+#          role: control
+          role: control
+          type: LoadBalancer
+          kind: Deployment
+          apiVersion: extensions/v1beta1
+          replicas: ${_param:opencontrail_replicas}
+          image_pull_secretes: tcpcloud
+          cluster_ip: ${_param:opencontrail_control_service_host}
+          service_name: 'control-node'
+          hostNetwork: True
+          nodeSelector:
+          - key: controller
+            value: control
+          container:
+            contrail-control:
+              image: ${_param:opencontrail_docker_control}
+              command:
+              - /entrypoint.sh
+              - control
+              tag: ${_param:opencontrail_docker_control_tag}
+              privileged: True
+              image_pull_policy: Always
+              ports:
+              - port: 8083
+                name: control
+              - port: 53
+                name: named
+              - port: 5269
+                name: xmpp
+              - port: 8092
+                name: dns-introspect
+              - port: 8093
+                name: dns-xmpp
+              variables:
+              - name: LOCAL_IP
+                fieldPath: status.podIP
+              - name: HOST_HOSTNAME
+                fieldPath: spec.nodeName
+              volumes:
+              - name: opencontrail-control
+                mount: /etc/contrail/contrail-control-nodemgr.conf
+                read_only: True
+                sub_path: contrail-control-nodemgr.conf
+              - name: opencontrail-control
+                mount: /etc/contrail/contrail-control.conf
+                read_only: True
+                sub_path: contrail-control.conf
+              - name: opencontrail-control
+                mount: /etc/contrail/contrail-dns.conf
+                read_only: True
+                sub_path: contrail-dns.conf
+              - name: opencontrail-control
+                mount: /etc/contrail/supervisord_control_files/contrail-control-nodemgr.ini
+                read_only: True
+                sub_path: contrail-control-nodemgr.ini
+          volume:
+            opencontrail-control:
+              version: ${_param:contrail_control_config_version}
+              type: config_map
+              item:
+                nodemgr:
+                  key: contrail-control-nodemgr.conf
+                  path: contrail-control-nodemgr.conf
+                control:
+                  key: contrail-control.conf
+                  path: contrail-control.conf
+                dns:
+                  key: contrail-dns.conf
+                  path: contrail-dns.conf
+                ini:
+                  key: contrail-control-nodemgr.ini
+                  path: contrail-control-nodemgr.ini

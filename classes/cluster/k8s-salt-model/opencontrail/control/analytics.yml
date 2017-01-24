@@ -1,0 +1,139 @@
+parameters:
+  kubernetes:
+    control:
+      configmap:
+        opencontrail-collector:
+          version: ${_param:contrail_collector_config_version}
+          pillar:
+            opencontrail:
+              collector:
+                database:
+                  members:
+                  - host: ${_param:opencontrail_analytics_service_host01}
+                    port: 9160
+                  - host: ${_param:opencontrail_analytics_service_host02}
+                    port: 9160
+                  - host: ${_param:opencontrail_analytics_service_host03}
+                    port: 9160
+      service:
+        contrail-collector:
+          enabled: true
+          service: opencontrail
+          namespace: default
+          cluster: opencontrail
+          hostNetwork: True
+          affinity:
+            anti_affinity:
+              name: podAntiAffinity
+              expression:
+                label_selector:
+                  name: labelSelector
+                  selectors:
+                  - key: app
+                    value: opencontrail-collector
+              topology_key: kubernetes.io/hostname
+          ports:
+          - port: 8081
+            name: analytics-api
+          - port: 8086
+            name: collector
+          - port: 6379
+            name: redis
+          role: collector
+          type: LoadBalancer
+          kind: Deployment
+          apiVersion: extensions/v1beta1
+          replicas: ${_param:opencontrail_replicas}
+          image_pull_secretes: tcpcloud
+          cluster_ip: ${_param:opencontrail_collector_service_host}
+          nodeSelector:
+          - key: controller
+            value: control
+          container:
+            contrail-collector:
+              image: ${_param:opencontrail_docker_analytics}
+              tag: ${_param:opencontrail_docker_analytics_tag}
+              command:
+              - /entrypoint.sh
+              - analytics
+              variables:
+              - name: IP
+                fieldPath: status.podIP
+              - name: LOCAL_IP
+                fieldPath: status.podIP
+              - name: HOST_HOSTNAME
+                fieldPath: spec.nodeName
+              image_pull_policy: Always
+              ports:
+              - port: 8081
+                name: analytics-api
+              - port: 8086
+                name: collector
+              volumes:
+              - name: opencontrail-collector
+                mount: /etc/contrail/contrail-analytics-nodemgr.conf
+                read_only: True
+                sub_path: contrail-analytics-nodemgr.conf
+              - name: opencontrail-collector
+                mount: /etc/contrail/contrail-alarm-gen.conf
+                read_only: True
+                sub_path: contrail-alarm-gen.conf
+              - name: opencontrail-collector
+                mount: /etc/contrail/contrail-snmp-collector.conf
+                read_only: True
+                sub_path: contrail-snmp-collector.conf
+              - name: opencontrail-collector
+                mount: /etc/contrail/contrail-topology.conf
+                read_only: True
+                sub_path: contrail-topology.conf
+              - name: opencontrail-collector
+                mount: /etc/contrail/contrail-collector.conf
+                read_only: True
+                sub_path: contrail-collector.conf
+              - name: opencontrail-collector
+                mount: /etc/contrail/contrail-query-engine.conf
+                read_only: True
+                sub_path: contrail-query-engine.conf
+              - name: opencontrail-collector
+                mount: /etc/contrail/contrail-analytics-api.conf
+                read_only: True
+                sub_path: contrail-analytics-api.conf
+              - name: opencontrail-collector
+                mount: /etc/contrail/supervisord_analytics_files/contrail-analytics-nodemgr.ini
+                read_only: True
+                sub_path: contrail-analytics-nodemgr.ini
+            redis-server:
+              image: tcpcloud/ccp-redis
+              tag: latest
+              ports:
+              - port: 6379
+                name: redis
+          volume:
+            opencontrail-collector:
+              version: ${_param:contrail_collector_config_version}
+              type: config_map
+              item:
+                nodemgr:
+                  key: contrail-analytics-nodemgr.conf
+                  path: contrail-analytics-nodemgr.conf
+                alarm:
+                  key: contrail-alarm-gen.conf
+                  path: contrail-alarm-gen.conf
+                snmp:
+                  key: contrail-snmp-collector.conf
+                  path: contrail-snmp-collector.conf
+                topology:
+                  key: contrail-topology.conf
+                  path: contrail-topology.conf
+                collector:
+                  key: contrail-collector.conf
+                  path: contrail-collector.conf
+                query:
+                  key: contrail-query-engine.conf
+                  path: contrail-query-engine.conf
+                api:
+                  key: contrail-analytics-api.conf
+                  path: contrail-analytics-api.conf
+                ini:
+                  key: contrail-analytics-nodemgr.ini
+                  path: contrail-analytics-nodemgr.ini
