@@ -1,0 +1,127 @@
+classes:
+- service.opencontrail.control.container
+- service.opencontrail.support
+- cluster.k8s-salt-model.opencontrail.control.analytics
+- cluster.k8s-salt-model.opencontrail.control.control
+- cluster.k8s-salt-model.opencontrail.control.config
+- cluster.k8s-salt-model.opencontrail.control.database
+- cluster.k8s-salt-model.opencontrail.control.web
+#- system.haproxy.proxy.listen.opencontrail
+parameters:
+  _param:
+    # OpenContrail docker images names and versions
+    opencontrail_docker_analytics: tcpcloud/opencontrail-3.0-analytics
+    opencontrail_docker_analytics_tag: latest
+    opencontrail_docker_control: tcpcloud/opencontrail-3.0-control
+    opencontrail_docker_control_tag: latest
+    opencontrail_docker_webui: tcpcloud/opencontrail-3.0-webui
+    opencontrail_docker_webui_tag: latest
+    opencontrail_docker_config: tcpcloud/opencontrail-3.0-config
+    opencontrail_docker_config_tag: latest
+    opencontrail_docker_database: tcpcloud/opencontrail-3.0-database
+    opencontrail_docker_database_tag: latest
+    rabbitmq_service_host: 10.254.0.11
+    opencontrail_replicas: 1
+    rabbitmq_hostname_node01: rabbitmq-server-node01
+    openstack_rabbitmq_tag: latest
+    opencontrail_container_tag: latest
+    opencontrail_database_tag: latest
+    opencontrail_database_service_host01: 10.254.0.27
+    opencontrail_database_service_host02: 10.254.0.28
+    opencontrail_database_service_host03: 10.254.0.29
+    opencontrail_analytics_service_host01: 10.254.0.30
+    opencontrail_analytics_service_host02: 10.254.0.31
+    opencontrail_analytics_service_host03: 10.254.0.32
+    opencontrail_control_service_host: 10.254.0.33
+    opencontrail_config_service_host: 10.254.0.34
+    opencontrail_collector_service_host: 10.254.0.35
+    opencontrail_web_service_host: 10.254.0.36
+    redis_service_host: 10.254.0.37
+    contrail_collector_config_version: 1
+    contrail_config_config_version: 1
+    contrail_control_config_version: 1
+    contrail_database_config_version: 1
+    contrail_web_config_version: 1
+    database_config_version: 1
+    rabbitmq_config_version: 1
+    rabbitmq_secret_key: password
+    rabbitmq_admin_password: password
+    rabbitmq_openstack_password: password
+  kubernetes:
+    control:
+      config_type: configmap
+      configmap:
+        rabbitmq-server:
+          version: ${_param:rabbitmq_config_version}
+          pillar:
+            rabbitmq:
+              cluster:
+                members:
+                  - name: ${_param:rabbitmq_hostname_node01}
+      service:
+        rabbitmq01:
+          enabled: true
+          service: rabbitmq
+#          cluster: rabbitmq01
+          cluster: rabbitmq
+          namespace: default
+          hostname: ${_param:rabbitmq_hostname_node01}
+          ports:
+          - port: 5672
+            name: rabbitmq
+          - port: 4369
+            name: epmd
+          - port: 25672
+            name: management
+          role: server-node01
+          type: LoadBalancer
+          kind: Deployment
+          apiVersion: extensions/v1beta1
+          cluster_ip: ${_param:rabbitmq_service_host01}
+          replicas: 1
+          image_pull_secretes: tcpcloud
+          nodeSelector:
+          - key: openstack
+            value: kvm01
+          container:
+            rabbitmq:
+              image: tcpcloud/ccp-rabbitmq
+              tag: ${_param:openstack_rabbitmq_tag}
+              ports:
+              - port: 5672
+                name: rabbitmq
+              - port: 4369
+                name: epmd
+              - port: 25672
+                name: management
+              volumes:
+              - name: rabbitmq-server
+                mount: /etc/rabbitmq
+                read_only: True
+              - name: rabbitmq
+                mount: /var/lib/rabbitmq
+                read_only: False
+              variables:
+              - name: ROLE
+                value: master
+              - name: CLUSTER_NAME
+                value: ${_param:openstack_rabbitmq_tag}
+              - name: COOKIE_HASH
+                value: ${_param:rabbitmq_secret_key}
+              readiness_probe:
+                type: exec
+                command:
+                - rabbitmqctl
+                - cluster_status
+                initial_delay: 10
+                timeout: 5
+          volume:
+            rabbitmq:
+              type: emptyDir
+            rabbitmq-server:
+              version: ${_param:rabbitmq_config_version}
+              type: config_map
+              item:
+                rabbitmq-config:
+                  key: rabbitmq.config
+                  path: rabbitmq.config

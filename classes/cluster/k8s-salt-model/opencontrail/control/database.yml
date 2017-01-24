@@ -1,0 +1,836 @@
+parameters:
+  kubernetes:
+    control:
+      configmap:
+        opencontrail-database:
+          version: ${_param:contrail_database_config_version}
+          pillar:
+            opencontrail:
+              database:
+                members:
+                - host: $DATABASE_MEMBER01
+                  id: 1
+                - host: $DATABASE_MEMBER02
+                  id: 2
+                - host: $DATABASE_MEMBER03
+                  id: 3
+      service:
+        contrail-database01:
+          enabled: true
+          service: oc
+          namespace: default
+          hostname: oc-database01
+          cluster: opencontrail
+          ports:
+          - port: 9160
+            name: rcp
+          - port: 9042
+            name: cassandra
+          - port: 7000
+            name: inter
+          - port: 2181
+            name: zookeeper
+          - port: 9092
+            name: kafka
+          - port: 2888
+            name: leader
+          - port: 3888
+            name: cluster
+          role: database01
+          type: LoadBalancer
+          kind: Deployment
+          apiVersion: extensions/v1beta1
+          replicas: 1
+          image_pull_secretes: tcpcloud
+          cluster_ip: ${_param:opencontrail_database_service_host01}
+          nodeSelector:
+          - key: openstack
+            value: ctl01
+          container:
+            contrail-database:
+              image: ${_param:opencontrail_docker_database}
+              tag: ${_param:opencontrail_docker_database_tag}
+              command:
+              - /entrypoint.sh
+              - database
+              image_pull_policy: Always
+              ports:
+              - port: 9160
+                name: rpc
+              - port: 9042
+                name: cassandra
+              - port: 7000
+                name: inter
+              - port: 9092
+                name: kafka
+              variables:
+              - name: IP
+                fieldPath: status.podIP
+              - name: ID
+                value: "'1'"
+              - name: DATABASE_MEMBER01
+                fieldPath: status.podIP
+              - name: DATABASE_MEMBER02
+                value: ${_param:opencontrail_database_service_host02}
+              - name: DATABASE_MEMBER03
+                value: ${_param:opencontrail_database_service_host03}
+              volumes:
+              - name: cassandra
+                mount: /var/lib/cassandra/
+                read_only: False
+              - name: opencontrail-database
+                mount: /etc/cassandra/cassandra.yaml
+                read_only: True
+                sub_path: cassandra.yaml
+              - name: opencontrail-database
+                mount: /etc/cassandra/cassandra-env.sh
+                read_only: True
+                sub_path: cassandra-env.sh
+              - name: opencontrail-database
+                mount: /etc/contrail/contrail-database-nodemgr.conf
+                read_only: True
+                sub_path: contrail-database-nodemgr.conf
+              - name: opencontrail-database
+                mount: /usr/share/kafka/config/server.properties
+                read_only: True
+                sub_path: server.properties
+            contrail-zookeeper:
+              image: tcpcloud/ccp-zookeeper
+              tag: latest
+              ports:
+              - port: 2181
+                name: zookeeper
+              - port: 3888
+                name: cluster
+              - port: 2888
+                name: leader
+              variables:
+              - name: IP
+                fieldPath: status.podIP
+              - name: ID
+                value: "'1'"
+              - name: DATABASE_MEMBER01
+                value: ${_param:opencontrail_database_service_host01}
+              - name: DATABASE_MEMBER02
+                value: ${_param:opencontrail_database_service_host02}
+              - name: DATABASE_MEMBER03
+                value: ${_param:opencontrail_database_service_host03}
+              volumes:
+              - name: zookeeper
+                mount: /var/lib/zookeeper/version-2
+                read_only: False
+              - name: opencontrail-database
+                mount: /etc/zookeeper/conf/zoo.cfg
+                read_only: True
+                sub_path: zoo.cfg
+          volume:
+            cassandra:
+              type: hostPath
+              path: /var/lib/cassandra/config
+              read_only: False
+            zookeeper:
+              type: hostPath
+              path: /var/lib/zookeeper/version-2
+              read_only: False
+            opencontrail-database:
+              version: ${_param:contrail_database_config_version}
+              type: config_map
+              item:
+                cassandra:
+                  key: cassandra.yaml
+                  path: cassandra.yaml
+                cassandra-env:
+                  key: cassandra-env.sh
+                  path: cassandra-env.sh
+                kafka:
+                  key: server.properties
+                  path: server.properties
+                nodemgr:
+                  key: contrail-database-nodemgr.conf
+                  path: contrail-database-nodemgr.conf
+                zookeeper:
+                  key: zoo.cfg
+                  path: zoo.cfg
+        contrail-database02:
+          enabled: true
+          service: oc
+          namespace: default
+          cluster: opencontrail
+          hostname: oc-database02
+          ports:
+          - port: 9160
+            name: rcp
+          - port: 9042
+            name: cassandra
+          - port: 7000
+            name: inter
+          - port: 2181
+            name: zookeeper
+          - port: 9092
+            name: kafka
+          - port: 3888
+            name: cluster
+          role: database02
+          type: LoadBalancer
+          kind: Deployment
+          apiVersion: extensions/v1beta1
+          replicas: 1
+          image_pull_secretes: tcpcloud
+          cluster_ip: ${_param:opencontrail_database_service_host02}
+          nodeSelector:
+          - key: openstack
+            value: ctl02
+          container:
+            contrail-database:
+              image: ${_param:opencontrail_docker_database}
+              tag: ${_param:opencontrail_docker_database_tag}
+              image_pull_policy: Always
+              command:
+              - /entrypoint.sh
+              - database
+              ports:
+              - port: 9160
+                name: rpc
+              - port: 9042
+                name: cassandra
+              - port: 7000
+                name: inter
+              - port: 9092
+                name: kafka
+              variables:
+              - name: IP
+                fieldPath: status.podIP
+              - name: ID
+                value: "'2'"
+              - name: DATABASE_MEMBER01
+                value: ${_param:opencontrail_database_service_host01}
+              - name: DATABASE_MEMBER02
+                fieldPath: status.podIP
+              - name: DATABASE_MEMBER03
+                value: ${_param:opencontrail_database_service_host03}
+              volumes:
+              - name: cassandra
+                mount: /var/lib/cassandra/
+                read_only: False
+              - name: opencontrail-database
+                mount: /etc/cassandra/cassandra.yaml
+                read_only: True
+                sub_path: cassandra.yaml
+              - name: opencontrail-database
+                mount: /etc/cassandra/cassandra-env.sh
+                read_only: True
+                sub_path: cassandra-env.sh
+              - name: opencontrail-database
+                mount: /etc/contrail/contrail-database-nodemgr.conf
+                read_only: True
+                sub_path: contrail-database-nodemgr.conf
+              - name: opencontrail-database
+                mount: /usr/share/kafka/config/server.properties
+                read_only: True
+                sub_path: server.properties
+            contrail-zookeeper:
+              image: tcpcloud/ccp-zookeeper
+              tag: latest
+              ports:
+              - port: 2181
+                name: zookeeper
+              - port: 3888
+                name: cluster
+              - port: 2888
+                name: leader
+              variables:
+              - name: IP
+                fieldPath: status.podIP
+              - name: ID
+                value: "'2'"
+              - name: DATABASE_MEMBER01
+                value: ${_param:opencontrail_database_service_host01}
+              - name: DATABASE_MEMBER02
+                value: ${_param:opencontrail_database_service_host02}
+              - name: DATABASE_MEMBER03
+                value: ${_param:opencontrail_database_service_host03}
+              volumes:
+              - name: zookeeper
+                mount: /var/lib/zookeeper/version-2
+                read_only: False
+              - name: opencontrail-database
+                mount: /etc/zookeeper/conf/zoo.cfg
+                read_only: True
+                sub_path: zoo.cfg
+          volume:
+            cassandra:
+              type: hostPath
+              path: /var/lib/cassandra/config
+              read_only: False
+            zookeeper:
+              type: hostPath
+              path: /var/lib/zookeeper/version-2
+              read_only: False
+            opencontrail-database:
+              version: ${_param:contrail_database_config_version}
+              type: config_map
+              item:
+                cassandra:
+                  key: cassandra.yaml
+                  path: cassandra.yaml
+                cassandra-env:
+                  key: cassandra-env.sh
+                  path: cassandra-env.sh
+                kafka:
+                  key: server.properties
+                  path: server.properties
+                nodemgr:
+                  key: contrail-database-nodemgr.conf
+                  path: contrail-database-nodemgr.conf
+                zookeeper:
+                  key: zoo.cfg
+                  path: zoo.cfg
+        contrail-database03:
+          enabled: true
+          service: oc
+          namespace: default
+          cluster: opencontrail
+          hostname: oc-database03
+          ports:
+          - port: 9160
+            name: rcp
+          - port: 9042
+            name: cassandra
+          - port: 7000
+            name: inter
+          - port: 2181
+            name: zookeeper
+          - port: 9092
+            name: kafka
+          - port: 2888
+            name: leader
+          - port: 3888
+            name: cluster
+          role: database03
+          type: LoadBalancer
+          kind: Deployment
+          apiVersion: extensions/v1beta1
+          replicas: 1
+          image_pull_secretes: tcpcloud
+          cluster_ip: ${_param:opencontrail_database_service_host03}
+          nodeSelector:
+          - key: openstack
+            value: ctl02
+          container:
+            contrail-database:
+              image: ${_param:opencontrail_docker_database}
+              tag: ${_param:opencontrail_docker_database_tag}
+              image_pull_policy: Always
+              command:
+              - /entrypoint.sh
+              - database
+              ports:
+              - port: 9160
+                name: rpc
+              - port: 9042
+                name: cassandra
+              - port: 7000
+                name: inter
+              - port: 2181
+                name: zookeeper
+              - port: 9092
+                name: kafka
+              variables:
+              - name: IP
+                fieldPath: status.podIP
+              - name: ID
+                value: "'3'"
+              - name: DATABASE_MEMBER01
+                value: ${_param:opencontrail_database_service_host01}
+              - name: DATABASE_MEMBER02
+                value: ${_param:opencontrail_database_service_host02}
+              - name: DATABASE_MEMBER03
+                fieldPath: status.podIP
+              volumes:
+              - name: cassandra
+                mount: /var/lib/cassandra/
+                read_only: False
+              - name: opencontrail-database
+                mount: /etc/cassandra/cassandra.yaml
+                read_only: True
+                sub_path: cassandra.yaml
+              - name: opencontrail-database
+                mount: /etc/cassandra/cassandra-env.sh
+                read_only: True
+                sub_path: cassandra-env.sh
+              - name: opencontrail-database
+                mount: /etc/contrail/contrail-database-nodemgr.conf
+                read_only: True
+                sub_path: contrail-database-nodemgr.conf
+              - name: opencontrail-database
+                mount: /usr/share/kafka/config/server.properties
+                read_only: True
+                sub_path: server.properties
+            contrail-zookeeper:
+              image: tcpcloud/ccp-zookeeper
+              tag: latest
+              ports:
+              - port: 2181
+                name: zookeeper
+              - port: 3888
+                name: cluster
+              - port: 2888
+                name: leader
+              variables:
+              - name: IP
+                fieldPath: status.podIP
+              - name: ID
+                value: "'3'"
+              - name: DATABASE_MEMBER01
+                value: ${_param:opencontrail_database_service_host01}
+              - name: DATABASE_MEMBER02
+                value: ${_param:opencontrail_database_service_host02}
+              - name: DATABASE_MEMBER03
+                value: ${_param:opencontrail_database_service_host03}
+              volumes:
+              - name: zookeeper
+                mount: /var/lib/zookeeper/version-2
+                read_only: False
+              - name: opencontrail-database
+                mount: /etc/zookeeper/conf/zoo.cfg
+                read_only: True
+                sub_path: zoo.cfg
+          volume:
+            cassandra:
+              type: hostPath
+              path: /var/lib/2/cassandra/config
+              read_only: False
+            zookeeper:
+              type: hostPath
+              path: /var/lib/2/zookeeper/version-2
+              read_only: False
+            opencontrail-database:
+              type: config_map
+              version: ${_param:contrail_database_config_version}
+              item:
+                cassandra:
+                  key: cassandra.yaml
+                  path: cassandra.yaml
+                cassandra-env:
+                  key: cassandra-env.sh
+                  path: cassandra-env.sh
+                kafka:
+                  key: server.properties
+                  path: server.properties
+                nodemgr:
+                  key: contrail-database-nodemgr.conf
+                  path: contrail-database-nodemgr.conf
+                zookeeper:
+                  key: zoo.cfg
+                  path: zoo.cfg
+        contrail-nal-database01:
+          enabled: true
+          service: oc
+          namespace: default
+          hostname: oc-nal-database01
+          cluster: opencontrail
+          ports:
+          - port: 9160
+            name: rcp
+          - port: 9042
+            name: cassandra
+          - port: 7000
+            name: inter
+          - port: 2181
+            name: zookeeper
+          - port: 9092
+            name: kafka
+          - port: 2888
+            name: leader
+          - port: 3888
+            name: cluster
+          role: nal-database01
+          type: LoadBalancer
+          kind: Deployment
+          apiVersion: extensions/v1beta1
+          replicas: 1
+          image_pull_secretes: tcpcloud
+          cluster_ip: ${_param:opencontrail_analytics_service_host01}
+          nodeSelector:
+          - key: openstack
+            value: ctl01
+          container:
+            contrail-database:
+              image: ${_param:opencontrail_docker_database}
+              tag: ${_param:opencontrail_docker_database_tag}
+              command:
+              - /entrypoint.sh
+              - database
+              ports:
+              - port: 9160
+                name: rpc
+              - port: 9042
+                name: cassandra
+              - port: 7000
+                name: inter
+              - port: 2181
+                name: zookeeper
+              - port: 9092
+                name: kafka
+              variables:
+              - name: IP
+                fieldPath: status.podIP
+              - name: ID
+                value: "'1'"
+              - name: DATABASE_MEMBER01
+                fieldPath: status.podIP
+              - name: DATABASE_MEMBER02
+                value: ${_param:opencontrail_analytics_service_host02}
+              - name: DATABASE_MEMBER03
+                value: ${_param:opencontrail_analytics_service_host03}
+              volumes:
+              - name: cassandra
+                mount: /var/lib/cassandra/
+                read_only: False
+              - name: opencontrail-database
+                mount: /etc/cassandra/cassandra.yaml
+                read_only: True
+                sub_path: cassandra.yaml
+              - name: opencontrail-database
+                mount: /etc/cassandra/cassandra-env.sh
+                read_only: True
+                sub_path: cassandra-env.sh
+              - name: opencontrail-database
+                mount: /etc/contrail/contrail-database-nodemgr.conf
+                read_only: True
+                sub_path: contrail-database-nodemgr.conf
+              - name: opencontrail-database
+                mount: /usr/share/kafka/config/server.properties
+                read_only: True
+                sub_path: server.properties
+            contrail-zookeeper:
+              image: tcpcloud/ccp-zookeeper
+              tag: latest
+              ports:
+              - port: 2181
+                name: zookeeper
+              - port: 3888
+                name: cluster
+              - port: 2888
+                name: leader
+              variables:
+              - name: IP
+                fieldPath: status.podIP
+              - name: ID
+                value: "'1'"
+              - name: DATABASE_MEMBER01
+                value: ${_param:opencontrail_analytics_service_host01}
+              - name: DATABASE_MEMBER02
+                value: ${_param:opencontrail_analytics_service_host02}
+              - name: DATABASE_MEMBER03
+                value: ${_param:opencontrail_analytics_service_host03}
+              volumes:
+              - name: zookeeper
+                mount: /var/lib/zookeeper/version-2
+                read_only: False
+              - name: opencontrail-database
+                mount: /etc/zookeeper/conf/zoo.cfg
+                read_only: True
+                sub_path: zoo.cfg
+          volume:
+            cassandra:
+              type: hostPath
+              path: /var/lib/cassandra/analytics
+              read_only: False
+            zookeeper:
+              type: hostPath
+              path: /var/lib/zookeeper/analytics/version-2
+              read_only: False
+            opencontrail-database:
+              version: ${_param:contrail_database_config_version}
+              type: config_map
+              item:
+                cassandra:
+                  key: cassandra.yaml
+                  path: cassandra.yaml
+                cassandra-env:
+                  key: cassandra-env.sh
+                  path: cassandra-env.sh
+                kafka:
+                  key: server.properties
+                  path: server.properties
+                nodemgr:
+                  key: contrail-database-nodemgr.conf
+                  path: contrail-database-nodemgr.conf
+                zookeeper:
+                  key: zoo.cfg
+                  path: zoo.cfg
+        contrail-nal-database02:
+          enabled: true
+          service: oc
+          namespace: default
+          hostname: oc-nal-database02
+          cluster: opencontrail
+          ports:
+          - port: 9160
+            name: rcp
+          - port: 9042
+            name: cassandra
+          - port: 7000
+            name: inter
+          - port: 2181
+            name: zookeeper
+          - port: 9092
+            name: kafka
+          - port: 2888
+            name: leader
+          - port: 3888
+            name: cluster
+          role: nal-database02
+          type: LoadBalancer
+          kind: Deployment
+          apiVersion: extensions/v1beta1
+          replicas: 1
+          image_pull_secretes: tcpcloud
+          cluster_ip: ${_param:opencontrail_analytics_service_host02}
+          nodeSelector:
+          - key: openstack
+            value: ctl02
+          container:
+            contrail-database:
+              image: ${_param:opencontrail_docker_database}
+              tag: ${_param:opencontrail_docker_database_tag}
+              command:
+              - /entrypoint.sh
+              - database
+              ports:
+              - port: 9160
+                name: rpc
+              - port: 9042
+                name: cassandra
+              - port: 7000
+                name: inter
+              - port: 2181
+                name: zookeeper
+              - port: 9092
+                name: kafka
+              variables:
+              - name: IP
+                fieldPath: status.podIP
+              - name: ID
+                value: "'2'"
+              - name: DATABASE_MEMBER01
+                value: ${_param:opencontrail_analytics_service_host01}
+              - name: DATABASE_MEMBER02
+                fieldPath: status.podIP
+              - name: DATABASE_MEMBER03
+                value: ${_param:opencontrail_analytics_service_host03}
+              volumes:
+              - name: cassandra
+                mount: /var/lib/cassandra/
+                read_only: False
+              - name: opencontrail-database
+                mount: /etc/cassandra/cassandra.yaml
+                read_only: True
+                sub_path: cassandra.yaml
+              - name: opencontrail-database
+                mount: /etc/cassandra/cassandra-env.sh
+                read_only: True
+                sub_path: cassandra-env.sh
+              - name: opencontrail-database
+                mount: /etc/contrail/contrail-database-nodemgr.conf
+                read_only: True
+                sub_path: contrail-database-nodemgr.conf
+              - name: opencontrail-database
+                mount: /usr/share/kafka/config/server.properties
+                read_only: True
+                sub_path: server.properties
+            contrail-zookeeper:
+              image: tcpcloud/ccp-zookeeper
+              tag: latest
+              ports:
+              - port: 2181
+                name: zookeeper
+              - port: 3888
+                name: cluster
+              - port: 2888
+                name: leader
+              variables:
+              - name: IP
+                fieldPath: status.podIP
+              - name: ID
+                value: "'2'"
+              - name: DATABASE_MEMBER01
+                value: ${_param:opencontrail_analytics_service_host01}
+              - name: DATABASE_MEMBER02
+                value: ${_param:opencontrail_analytics_service_host02}
+              - name: DATABASE_MEMBER03
+                value: ${_param:opencontrail_analytics_service_host03}
+              volumes:
+              - name: zookeeper
+                mount: /var/lib/zookeeper/version-2
+                read_only: False
+              - name: opencontrail-database
+                mount: /etc/zookeeper/conf/zoo.cfg
+                read_only: True
+                sub_path: zoo.cfg
+          volume:
+            cassandra:
+              type: hostPath
+              path: /var/lib/cassandra/analytics
+              read_only: False
+            zookeeper:
+              type: hostPath
+              path: /var/lib/zookeeper/analytics/version-2
+              read_only: False
+            opencontrail-database:
+              type: config_map
+              version: ${_param:contrail_database_config_version}
+              item:
+                cassandra:
+                  key: cassandra.yaml
+                  path: cassandra.yaml
+                cassandra-env:
+                  key: cassandra-env.sh
+                  path: cassandra-env.sh
+                kafka:
+                  key: server.properties
+                  path: server.properties
+                nodemgr:
+                  key: contrail-database-nodemgr.conf
+                  path: contrail-database-nodemgr.conf
+                zookeeper:
+                  key: zoo.cfg
+                  path: zoo.cfg
+        contrail-nal-database03:
+          enabled: true
+          service: oc
+          namespace: default
+          hostname: oc-nal-database03
+          cluster: opencontrail
+          ports:
+          - port: 9160
+            name: rcp
+          - port: 9042
+            name: cassandra
+          - port: 7000
+            name: inter
+          - port: 2181
+            name: zookeeper
+          - port: 9092
+            name: kafka
+          - port: 2888
+            name: leader
+          - port: 3888
+            name: cluster
+          role: nal-database03
+          type: LoadBalancer
+          kind: Deployment
+          apiVersion: extensions/v1beta1
+          replicas: 1
+          image_pull_secretes: tcpcloud
+          cluster_ip: ${_param:opencontrail_analytics_service_host03}
+          nodeSelector:
+          - key: openstack
+            value: ctl02
+          container:
+            contrail-database:
+              image: ${_param:opencontrail_docker_database}
+              tag: ${_param:opencontrail_docker_database_tag}
+              command:
+              - /entrypoint.sh
+              - database
+              ports:
+              - port: 9160
+                name: rpc
+              - port: 9042
+                name: cassandra
+              - port: 7000
+                name: inter
+              - port: 2181
+                name: zookeeper
+              - port: 9092
+                name: kafka
+              variables:
+              - name: IP
+                fieldPath: status.podIP
+              - name: ID
+                value: "'3'"
+              - name: DATABASE_MEMBER01
+                value: ${_param:opencontrail_analytics_service_host01}
+              - name: DATABASE_MEMBER02
+                value: ${_param:opencontrail_analytics_service_host02}
+              - name: DATABASE_MEMBER03
+                fieldPath: status.podIP
+              volumes:
+              - name: cassandra
+                mount: /var/lib/cassandra/
+                read_only: False
+              - name: opencontrail-database
+                mount: /etc/cassandra/cassandra.yaml
+                read_only: True
+                sub_path: cassandra.yaml
+              - name: opencontrail-database
+                mount: /etc/cassandra/cassandra-env.sh
+                read_only: True
+                sub_path: cassandra-env.sh
+              - name: opencontrail-database
+                mount: /etc/contrail/contrail-database-nodemgr.conf
+                read_only: True
+                sub_path: contrail-database-nodemgr.conf
+              - name: opencontrail-database
+                mount: /usr/share/kafka/config/server.properties
+                read_only: True
+                sub_path: server.properties
+            contrail-zookeeper:
+              image: tcpcloud/ccp-zookeeper
+              tag: latest
+              ports:
+              - port: 2181
+                name: zookeeper
+              - port: 3888
+                name: cluster
+              - port: 2888
+                name: leader
+              variables:
+              - name: IP
+                fieldPath: status.podIP
+              - name: ID
+                value: "'3'"
+              - name: DATABASE_MEMBER01
+                value: ${_param:opencontrail_analytics_service_host01}
+              - name: DATABASE_MEMBER02
+                value: ${_param:opencontrail_analytics_service_host02}
+              - name: DATABASE_MEMBER03
+                value: ${_param:opencontrail_analytics_service_host03}
+              volumes:
+              - name: zookeeper
+                mount: /var/lib/zookeeper/version-2
+                read_only: False
+              - name: opencontrail-database
+                mount: /etc/zookeeper/conf/zoo.cfg
+                read_only: True
+                sub_path: zoo.cfg
+          volume:
+            cassandra:
+              type: hostPath
+              path: /var/lib/2/cassandra/analytics
+              read_only: False
+            zookeeper:
+              type: hostPath
+              path: /var/lib/2/zookeeper/analytics/version-2
+              read_only: False
+            opencontrail-database:
+              version: ${_param:contrail_database_config_version}
+              type: config_map
+              item:
+                cassandra:
+                  key: cassandra.yaml
+                  path: cassandra.yaml
+                cassandra-env:
+                  key: cassandra-env.sh
+                  path: cassandra-env.sh
+                kafka:
+                  key: server.properties
+                  path: server.properties
+                nodemgr:
+                  key: contrail-database-nodemgr.conf
+                  path: contrail-database-nodemgr.conf
+                zookeeper:
+                  key: zoo.cfg
+                  path: zoo.cfg
