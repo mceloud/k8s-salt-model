@@ -12,6 +12,7 @@ parameters:
                   engine: none
                   password: none
                   token: none
+                  host: none
                 database:
                   members:
                   - host: ${_param:opencontrail_database_service_host01}
