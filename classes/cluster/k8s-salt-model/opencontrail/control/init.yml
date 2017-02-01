@@ -6,6 +6,7 @@ classes:
 - cluster.k8s-salt-model.opencontrail.control.config
 - cluster.k8s-salt-model.opencontrail.control.database
 - cluster.k8s-salt-model.opencontrail.control.web
+- cluster.k8s-salt-model.opencontrail.control.support
 #- system.haproxy.proxy.listen.opencontrail
 parameters:
   _param:
@@ -28,7 +29,7 @@ parameters:
     openstack_rabbitmq_tag: latest
     opencontrail_container_tag: latest
     opencontrail_database_tag: latest
-    opencontrail_database_service_host01: 10.254.0.27
+    opencontrail_database_service_host01: ${_param:kubernetes_control_address}
     opencontrail_database_service_host02: 10.254.0.28
     opencontrail_database_service_host03: 10.254.0.29
     opencontrail_analytics_service_host01: 10.254.0.30
