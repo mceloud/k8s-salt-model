@@ -29,8 +29,9 @@ parameters:
           apiVersion: extensions/v1beta1
           replicas: 1
           image_pull_secretes: tcpcloud
-          cluster_ip: ${_param:opencontrail_database_service_host01}
+          cluster_ip: 10.254.0.27
           hostNetwork: True
+          external_ip: ${_param:opencontrail_database_service_host01}
           nodeSelector:
           - key: openstack
             value: ctl01
@@ -73,7 +74,7 @@ parameters:
               - name: SERVERS
                 fieldPath: status.podIP
               - name: MYID
-                value: 1
+                value: "1"
               volumes:
               - name: zookeeper
                 mount: /var/lib/zookeeper
