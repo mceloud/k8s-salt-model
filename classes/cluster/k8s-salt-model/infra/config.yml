@@ -19,6 +19,11 @@ parameters:
     salt_master_host: ${_param:infra_config_deploy_address}
     linux_system_codename: xenial
   reclass:
+    linux:
+      system:
+        kernel:
+          sysctl:
+            net.bridge.bridge-nf-call-iptables: 0
     storage:
       node:
         kubernetes_control_node01:
