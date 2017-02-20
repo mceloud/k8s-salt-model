@@ -3,16 +3,16 @@ classes:
 - system.openssh.client.lab
 - system.salt.master.pkg
 - system.salt.minion.ca.salt_master
-- system.salt.minion.cert.k8s_server
+- system.salt.minion.cert.k8s_server_single
 - system.salt.master.api
 - system.reclass.storage.salt
-- system.reclass.storage.system.kubernetes_control_cluster
+- system.reclass.storage.system.kubernetes_control_single
 - cluster.k8s-salt-model
 parameters:
   _param:
     salt_master_base_environment: prd
-    reclass_data_repository: "https://github.com/pupapaik/k8s-salt-model.git"
-    reclass_data_revision: master
+    reclass_data_repository: "https://github.com/mceloud/k8s-salt-model.git"
+    reclass_data_revision: k8s-oc
     reclass_config_master: ${_param:infra_config_deploy_address}
     single_address: ${_param:infra_config_address}
     deploy_address: ${_param:infra_config_deploy_address}
@@ -21,15 +21,6 @@ parameters:
   reclass:
     storage:
       node:
-        kubernetes_control_node01:
-          params:
-            deploy_address: ${_param:kubernetes_control_node01_deploy_address}
-        kubernetes_control_node02:
-          params:
-            deploy_address: ${_param:kubernetes_control_node02_deploy_address}
-        kubernetes_control_node03:
-          params:
-            deploy_address: ${_param:kubernetes_control_node03_deploy_address}
         kubernetes_compute_node01:
           name: ${_param:kubernetes_compute_node01_hostname}
           domain: ${_param:cluster_domain}
@@ -38,7 +29,6 @@ parameters:
           params:
             salt_master_host: ${_param:reclass_config_master}
             linux_system_codename: xenial
-            deploy_address: ${_param:kubernetes_compute_node01_deploy_address}
             single_address: ${_param:kubernetes_compute_node01_single_address}
         kubernetes_compute_node02:
           name: ${_param:kubernetes_compute_node02_hostname}
@@ -48,5 +38,4 @@ parameters:
           params:
             salt_master_host: ${_param:reclass_config_master}
             linux_system_codename: xenial
-            deploy_address: ${_param:kubernetes_compute_node02_deploy_address}
             single_address: ${_param:kubernetes_compute_node02_single_address}
