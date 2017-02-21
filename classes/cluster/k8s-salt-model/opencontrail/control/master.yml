@@ -1,8 +1,9 @@
 classes:
 - service.rabbitmq.server.single
 - service.opencontrail.control.single
+- service.haproxy.proxy.single
 - cluster.k8s-salt-model
-parameters:
+arameters:
   _param:
     rabbitmq_service_host: 10.254.0.11
     rabbitmq_service_host01: 10.254.0.11
@@ -15,6 +16,17 @@ parameters:
     keystone_service_token:
     keystone_admin_password:
     linux_repo_contrail_component: oc30
+  rabbitmq:
+    server:
+      host:
+        '/':
+          enabled: true
+          user: guest
+          password: guest
+          policies:
+          - name: HA
+            pattern: '^(?!amq\.).*'
+            definition: '{"ha-mode": "all", "message-ttl": 120000}'
   opencontrail:
     common:
       identity:
@@ -31,6 +43,8 @@ parameters:
         engine: k8s
       identity:
         engine: k8s
+    control:
+      id: 1
   linux:
     system:
       repo:
@@ -38,3 +52,39 @@ parameters:
           source: "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ ${_param:linux_system_codename} extra ${_param:linux_repo_contrail_component}"
           architectures: amd64
           key_url: "http://apt.tcpcloud.eu/public.gpg"
+  haproxy:
+    proxy:
+      listen:
+        contrail_api:
+          type: contrail-api
+          service_name: contrail
+          binds:
+          - address: ${_param:single_address}
+            port: 8082
+          servers:
+          - name: ntw01
+            host: ${_param:single_address}
+            port: 9100
+            params: check inter 2000 rise 2 fall 3
+        contrail_discovery:
+          type: contrail-api
+          service_name: contrail
+          binds:
+          - address: ${_param:single_address}
+            port: 5998
+          servers:
+          - name: ntw01
+            host: ${_param:single_address}
+            port: 9110
+            params: check inter 2000 rise 2 fall 3
+        contrail_analytics:
+          type: contrail-analytics
+          service_name: contrail
+          binds:
+          - address: ${_param:single_address}
+            port: 8081
+          servers:
+          - name: ntw01
+            host: ${_param:single_address}
+            port: 9081
+            params: check inter 2000 rise 2 fall 3

@@ -4,26 +4,26 @@ parameters:
   _param:
   opencontrail:
     common:
-      version: ${_param:opencontrail_version}
+      version: 3.0
       identity:
-        engine: keystone
-        host: ${_param:keystone_service_host}
+        engine: k8s
+        host:
         port: 35357
-        token: ${_param:keystone_service_token}
-        password: ${_param:keystone_admin_password}
+        token:
+        password:
       network:
-        engine: neutron
-        host: ${_param:neutron_service_host}
+        engine: k8s
+        host:
         port: 9696
     compute:
-      version: ${_param:opencontrail_version}
+      version: 3.0
       enabled: True
       discovery:
-        host: ${_param:opencontrail_config_service_host}
+        host: ${_param:kubernetes_network_node01_single_address}
       interface:
         address: ${_param:single_address}
-        dev: ${_param:opencontrail_iface}
-        gateway: ${_param:opencontrail_gateway}
-        mask: ${_param:opencontrail_netmask}
+        dev: eth0
+        gateway: 10.0.174.1
+        mask: 23
         dns: 8.8.8.8
         mtu: 9000
