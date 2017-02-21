@@ -2,7 +2,7 @@ classes:
 - system.linux.system.repo.docker
 - system.kubernetes.pool.single
 - system.salt.minion.cert.k8s_client_single
-- cluster.k8s-salt-model.opencontrail.compute
+- cluster.k8s-salt-model.opencontrail.compute.cluster
 #- system.bird.server.single
 - cluster.k8s-salt-model
 parameters:
