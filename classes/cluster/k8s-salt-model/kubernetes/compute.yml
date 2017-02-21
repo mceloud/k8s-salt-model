@@ -12,6 +12,8 @@ parameters:
 #          - /srv/calico/bird.cfg.mesh.template:/etc/calico/confd/templates/bird.cfg.mesh.template
 #          - /srv/calico/bird.cfg.no-mesh.template:/etc/calico/confd/templates/bird.cfg.no-mesh.template
 #          - /srv/calico/custom_filters.cfg:/etc/calico/confd/config/custom_filters.cfg
+      network:
+        engine: opencontrail
     common:
       hyperkube:
         image: tcpcloud/hyperkube:v1.5.1
