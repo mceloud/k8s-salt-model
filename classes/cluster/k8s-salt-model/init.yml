@@ -38,3 +38,6 @@ parameters:
     ##FIXME if ntp defined
     #ntp_strata_host1: 
     #ntp_strata_host2: 
+
+    kubernetes_network_node01_single_address: 10.10.6.6
+    kubernetes_network_node01_hostname: ntw01

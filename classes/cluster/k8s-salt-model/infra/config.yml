@@ -39,3 +39,12 @@ parameters:
             salt_master_host: ${_param:reclass_config_master}
             linux_system_codename: xenial
             single_address: ${_param:kubernetes_compute_node02_single_address}
+        kubernetes_network_node01:
+          name: ${_param:kubernetes_network_node01_hostname}
+          domain: ${_param:cluster_domain}
+          classes:
+          - cluster.${_param:cluster_name}.opencontrail.control.master
+          params:
+            salt_master_host: ${_param:reclass_config_master}
+            linux_system_codename: xenial
+            single_address: ${_param:kubernetes_network_node01_single_address}
