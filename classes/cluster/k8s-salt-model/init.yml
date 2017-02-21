@@ -16,8 +16,8 @@ parameters:
     salt_minion_ca_authority: salt_master_ca
 
     # infra service addresses
-    infra_config_address: 10.0.175.49
-    infra_config_deploy_address: 10.0.175.49
+    infra_config_address: 10.0.175.117
+    infra_config_deploy_address: 10.0.175.117
     infra_config_hostname: cfg01
 
     # node hostnames
@@ -26,11 +26,11 @@ parameters:
     kubernetes_control_node01_hostname: ctl01
 
     # kubernetes service addresses
-    kubernetes_control_node01_address: 10.0.175.33
+    kubernetes_control_node01_address: 10.0.175.118
 
     # kubernetes compute
-    kubernetes_compute_node01_single_address: 10.0.175.48
-    kubernetes_compute_node02_single_address: 10.0.175.74
+    kubernetes_compute_node01_single_address: 10.0.175.119
+    kubernetes_compute_node02_single_address: 10.0.175.120
 
     control_address: ${_param:kubernetes_control_node01_address}
     ##FIXME if ntp defined
