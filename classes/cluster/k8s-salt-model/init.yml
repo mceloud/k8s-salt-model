@@ -33,6 +33,7 @@ parameters:
     kubernetes_compute_node02_single_address: 10.0.175.120
 
     control_address: ${_param:kubernetes_control_node01_address}
+    kubernetes_control_address: ${_param:kubernetes_control_node01_address}
     ##FIXME if ntp defined
     #ntp_strata_host1: 
     #ntp_strata_host2: 
