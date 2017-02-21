@@ -34,6 +34,7 @@ parameters:
 
     control_address: ${_param:kubernetes_control_node01_address}
     kubernetes_control_address: ${_param:kubernetes_control_node01_address}
+    master_address: ${_param:kubernetes_control_node01_address}
     ##FIXME if ntp defined
     #ntp_strata_host1: 
     #ntp_strata_host2: 
