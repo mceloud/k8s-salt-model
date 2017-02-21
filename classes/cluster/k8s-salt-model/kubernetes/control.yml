@@ -11,3 +11,8 @@ parameters:
     master:
       network:
         engine: opencontrail
+        public_ip_range: 185.22.97.128/26
+        public_network: default-domain:default-project:Public
+        private_ip_range: 10.150.0.0/16
+        opencontrail:
+          address: ${_param:kubernetes_control_node01_address}
