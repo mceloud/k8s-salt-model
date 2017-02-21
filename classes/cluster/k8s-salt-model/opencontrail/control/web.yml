@@ -14,8 +14,6 @@ parameters:
                   host: none
                 members:
                 - host: ${_param:opencontrail_database_service_host01}
-                - host: ${_param:opencontrail_database_service_host02}
-                - host: ${_param:opencontrail_database_service_host03}
                 network:
                   host: 127.0.0.1
       service:
@@ -32,6 +30,7 @@ parameters:
           role: web
           type: LoadBalancer
           kind: Deployment
+          hostNetwork: True
           apiVersion: extensions/v1beta1
           replicas: ${_param:opencontrail_replicas}
           image_pull_secretes: tcpcloud

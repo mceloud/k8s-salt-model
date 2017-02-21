@@ -36,30 +36,6 @@ parameters:
           - key: openstack
             value: ctl01
           container:
-            cassandra:
-              image: cassandra
-              tag: 2.2.0
-              command:
-              - /bin/sh
-              - -c
-              - sed -ri 's/^(start_rpc:) .*/\\1 true/' /etc/cassandra/cassandra.yaml && /docker-entrypoint.sh cassandra -f
-              image_pull_policy: Always
-              ports:
-              - port: 9160
-                name: rpc
-              - port: 9042
-                name: cassandra
-              - port: 7000
-                name: inter
-              - port: 9092
-                name: kafka
-              variables:
-              - name: CASSANDRA_CLUSTER_NAME
-                value: OpenContrail-config
-              volumes:
-              - name: cassandra
-                mount: /var/lib/cassandra/
-                read_only: False
             zookeeper:
               image: mesoscloud/zookeeper
               tag: 3.4.6
@@ -89,10 +65,6 @@ parameters:
               - name: RABBITMQ_NODENAME
                 value: localhost
           volume:
-            cassandra:
-              type: hostPath
-              path: /var/lib/cassandra/config
-              read_only: False
             zookeeper:
               type: hostPath
               path: /var/lib/zookeeper

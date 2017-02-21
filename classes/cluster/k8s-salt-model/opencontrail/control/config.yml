@@ -17,18 +17,10 @@ parameters:
                   members:
                   - host: ${_param:opencontrail_database_service_host01}
                     port: 9160
-                  - host: ${_param:opencontrail_database_service_host02}
-                    port: 9160
-                  - host: ${_param:opencontrail_database_service_host03}
-                    port: 9160
                 ifmap:
                   members:
                   - user: ctl01
                     password: ctl01
-                  - user: ctl02
-                    password: ctl02
-                  - user: ctl03
-                    password: ctl03
       service:
         contrail-config:
           enabled: true
@@ -119,10 +111,6 @@ parameters:
                 read_only: True
                 sub_path: contrail-sudoers
               - name: opencontrail-config
-                mount: /etc/contrail/contrail-keystone-auth.conf
-                read_only: True
-                sub_path: contrail-keystone-auth.conf
-              - name: opencontrail-config
                 mount: /etc/contrail/contrail-schema.conf
                 read_only: True
                 sub_path: contrail-schema.conf
@@ -157,9 +145,6 @@ parameters:
                 device:
                   key: contrail-device-manager.conf
                   path: contrail-device-manager.conf
-                keystone:
-                  key: contrail-keystone-auth.conf
-                  path: contrail-keystone-auth.conf
                 schema:
                   key: contrail-schema.conf
                   path: contrail-schema.conf

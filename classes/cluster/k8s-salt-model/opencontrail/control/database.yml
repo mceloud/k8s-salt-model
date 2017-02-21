@@ -10,10 +10,6 @@ parameters:
                 members:
                 - host: $DATABASE_MEMBER01
                   id: 1
-                - host: $DATABASE_MEMBER02
-                  id: 2
-                - host: $DATABASE_MEMBER03
-                  id: 3
       service:
         contrail-database01:
           enabled: true

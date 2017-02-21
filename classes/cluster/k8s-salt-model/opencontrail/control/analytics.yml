@@ -11,10 +11,6 @@ parameters:
                   members:
                   - host: ${_param:opencontrail_analytics_service_host01}
                     port: 9160
-                  - host: ${_param:opencontrail_analytics_service_host02}
-                    port: 9160
-                  - host: ${_param:opencontrail_analytics_service_host03}
-                    port: 9160
       service:
         contrail-collector:
           enabled: true
