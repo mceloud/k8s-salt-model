@@ -11,6 +11,9 @@ parameters:
     kubernetes_dns_token: WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
     etcd_initial_token: WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
     kubernetes_internal_api_address: 10.254.0.1
+    node_address: ${_param:single_address}
+    node_hostname: ${_param:kubernetes_control_node01_hostname}
+    node_port: 4001
   linux:
     network:
       host:
