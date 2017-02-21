@@ -15,7 +15,7 @@ parameters:
       network:
         engine: opencontrail
         opencontrail:
-          address: ${_param:kubernetes_control_node01_address}
+          address: ${_param:infra_config_address}
     common:
       hyperkube:
         image: tcpcloud/hyperkube:v1.5.1

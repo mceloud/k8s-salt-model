@@ -10,8 +10,10 @@ parameters:
     rabbitmq_secret_key: password
     rabbitmq_admin_password: password
     rabbitmq_openstack_password: password
+    opencontrail_database_id: 1
     keystone_service_token:
     keystone_admin_password:
+    linux_repo_contrail_component: oc30
   opencontrail:
     common:
       identity:
@@ -28,3 +30,10 @@ parameters:
         engine: k8s
       identity:
         engine: k8s
+  linux:
+    system:
+      repo:
+        tcpcloud_opencontrail:
+          source: "deb [arch=amd64] http://apt.tcpcloud.eu/nightly/ ${_param:linux_system_codename} extra ${_param:linux_repo_contrail_component}"
+          architectures: amd64
+          key_url: "http://apt.tcpcloud.eu/public.gpg"
