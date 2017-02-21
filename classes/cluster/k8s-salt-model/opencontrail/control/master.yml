@@ -1,0 +1,30 @@
+classes:
+- service.rabbitmq.server.single
+- service.opencontrail.control.single
+parameters:
+  _param:
+    rabbitmq_service_host: 10.254.0.11
+    rabbitmq_service_host01: 10.254.0.11
+    opencontrail_version: 3.0
+    rabbitmq_hostname_node01: rabbitmq-server-node01
+    rabbitmq_secret_key: password
+    rabbitmq_admin_password: password
+    rabbitmq_openstack_password: password
+    keystone_service_token:
+    keystone_admin_password:
+  opencontrail:
+    common:
+      identity:
+        engine: k8s
+      network:
+        engine: k8s
+    config:
+      network:
+        engine: k8s
+      identity:
+        engine: k8s
+    web:
+      network:
+        engine: k8s
+      identity:
+        engine: k8s
