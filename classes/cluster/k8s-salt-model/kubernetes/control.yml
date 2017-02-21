@@ -15,4 +15,4 @@ parameters:
         public_network: default-domain:default-project:Public
         private_ip_range: 10.150.0.0/16
         opencontrail:
-          address: ${_param:infra_config_address}
+          address: ${_param:kubernetes_network_node01_single_address}

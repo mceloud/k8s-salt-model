@@ -1,6 +1,7 @@
 classes:
 - service.rabbitmq.server.single
 - service.opencontrail.control.single
+- cluster.k8s-salt-model
 parameters:
   _param:
     rabbitmq_service_host: 10.254.0.11
