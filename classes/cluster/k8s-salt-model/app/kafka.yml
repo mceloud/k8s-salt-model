@@ -15,6 +15,7 @@ parameters:
           kind: StatefulSet
           apiVersion: apps/v1beta1
           replicas: 1
+          service_name: kafka
           nodeSelector:
           - key: node
             value: compute
