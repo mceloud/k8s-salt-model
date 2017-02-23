@@ -40,4 +40,4 @@ parameters:
     #ntp_strata_host2: 
 
     kubernetes_network_node01_single_address: 10.10.6.6
-    kubernetes_network_node01_hostname: ntw01
+    kubernetes_network_node01_hostname: ntw001

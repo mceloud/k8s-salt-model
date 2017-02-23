@@ -3,7 +3,7 @@ classes:
 - service.opencontrail.control.single
 - service.haproxy.proxy.single
 - cluster.k8s-salt-model
-arameters:
+parameters:
   _param:
     rabbitmq_service_host: 10.254.0.11
     rabbitmq_service_host01: 10.254.0.11
@@ -38,6 +38,7 @@ arameters:
         engine: k8s
       identity:
         engine: k8s
+      multi_tenancy: false
     web:
       network:
         engine: k8s
