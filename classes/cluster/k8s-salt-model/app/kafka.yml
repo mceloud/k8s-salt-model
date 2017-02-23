@@ -14,7 +14,7 @@ parameters:
           type: LoadBalancer
           kind: StatefulSet
           apiVersion: apps/v1beta1
-          replicas: 3
+          replicas: 1
           nodeSelector:
           - key: node
             value: compute
@@ -29,4 +29,4 @@ parameters:
               command:
               - sh
               - -c
-              - "./bin/kafka-server-start.sh config/server.properties --override zookeeper.connect=192.168.0.3:2181/ --override broker.id=${HOSTNAME##*-}"
+              - "./bin/kafka-server-start.sh config/server.properties --override zookeeper.connect=192.168.0.3:2181/ --override broker.id=1"
