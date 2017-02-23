@@ -5,7 +5,7 @@ classes:
 #- system.salt.minion.cert.k8s_server_certificate
 - system.kubernetes.master.single
 - cluster.k8s-salt-model.kubernetes.compute
-- cluster.k8s-salt-model.opencontrail.control
+- cluster.k8s-salt-model.opencontrail.control.master
 - cluster.k8s-salt-model.opencontrail.compute.cluster
 - cluster.k8s-salt-model.app.kafka
 - cluster.k8s-salt-model

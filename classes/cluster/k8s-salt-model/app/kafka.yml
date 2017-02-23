@@ -12,8 +12,8 @@ parameters:
             name: kafka
           role: server
           type: LoadBalancer
-          kind: PetSet
-          apiVersion: extensions/v1alpha1
+          kind: StatefulSet
+          apiVersion: apps/v1beta1
           replicas: 3
           nodeSelector:
           - key: node
