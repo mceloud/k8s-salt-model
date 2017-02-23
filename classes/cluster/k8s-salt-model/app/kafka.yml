@@ -1,0 +1,32 @@
+parameters:
+  kubernetes:
+    control:
+      service:
+        kafka:
+          enabled: true
+          service: kafka
+          namespace: default
+          cluster: kafka
+          ports:
+          - port: 9082
+            name: kafka
+          role: server
+          type: LoadBalancer
+          kind: PetSet
+          apiVersion: extensions/v1alpha1
+          replicas: 3
+          nodeSelector:
+          - key: node
+            value: compute
+          container:
+            contrail-config:
+              image: solsson/kafka
+              tag: latest
+              image_pull_policy: Always
+              ports:
+              - port: 9082
+                name: kafka
+              command:
+              - sh
+              - -c
+              - "./bin/kafka-server-start.sh config/server.properties --override zookeeper.connect=192.168.0.3:2181/ --override broker.id=${HOSTNAME##*-}"
