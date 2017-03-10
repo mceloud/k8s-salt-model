@@ -13,6 +13,8 @@ parameters:
     keepalived_vip_virtual_router_id: 60
   etcd:
     server:
+      source:
+        engine: docker_hybrid
       ssl:
         enabled: true
       setup:
