@@ -3,7 +3,7 @@ classes:
 - system.haproxy.proxy.listen.kubernetes.etcd
 - system.haproxy.proxy.listen.kubernetes.apiserver
 - system.linux.system.repo.docker
-#- system.salt.minion.cert.k8s_server_certificate
+- system.salt.minion.cert.etcd_server
 - system.kubernetes.master.cluster
 - cluster.k8s-salt-model.kubernetes.compute
 - cluster.k8s-salt-model
@@ -13,7 +13,18 @@ parameters:
     keepalived_vip_virtual_router_id: 60
   etcd:
     server:
+      ssl:
+        enabled: true
       setup:
         calico:
           key: /calico/v1/ipam/v4/pool/${_param:calico_private_network}-${_param:calico_private_netmask}
           value: '{"masquerade": true, "cidr": "${_param:calico_private_network}/${_param:calico_private_netmask}"}'
+  kubernetes:
+    master:
+      etcd:
+        ssl:
+          enabled: true
+      network:
+        etcd:
+          ssl:
+            enabled: true
