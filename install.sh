@@ -23,12 +23,12 @@ salt -C 'I@docker:host' state.sls docker.host
 salt -C 'I@docker:host' cmd.run 'docker ps'
 
 # Install etcd with ssl support
-salt -C 'I@etcd:server' state.sls salt.minion.cert,etcd.server.service
+salt -C 'I@etcd:server' state.sls etcd.server.service
 salt -C 'I@etcd:server' cmd.run '. /var/lib/etcd/configenv && etcdctl cluster-health'
 
 # Install Kubernetes and Calico
 salt -C 'I@kubernetes:master' state.sls kubernetes.master.kube-addons
-salt -C 'I@kubernetes:pool' state.sls salt.minion.cert,kubernetes.pool
+salt -C 'I@kubernetes:pool' state.sls kubernetes.pool
 salt -C 'I@kubernetes:pool' cmd.run 'calicoctl node status'
 
 # Setup NAT for Calico
