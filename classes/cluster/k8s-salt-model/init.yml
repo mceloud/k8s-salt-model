@@ -9,7 +9,7 @@ classes:
 - cluster.k8s-salt-model.kubernetes
 parameters: 
   _param:
-    cluster_domain: mcp-fuel-aio.local
+    cluster_domain: virtual_mcp10_k8s.local
     reclass_data_revision: master
     cluster_name: k8s-salt-model
 
