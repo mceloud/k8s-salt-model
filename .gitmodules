@@ -1,4 +1,4 @@
 [submodule "classes/system"]
 	path = classes/system
-	url = git@github.com:Mirantis/reclass-system-salt-model.git
+	url = https://gerrit.mcp.mirantis.net/p/salt-models/reclass-system.git
 	branch = master
