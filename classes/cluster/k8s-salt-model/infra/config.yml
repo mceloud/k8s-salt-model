@@ -20,6 +20,11 @@ parameters:
     linux_system_codename: xenial
     apt_mk_version: nightly
   reclass:
+    linux:
+      system:
+        kernel:
+          sysctl:
+            net.bridge.bridge-nf-call-iptables: 0
     storage:
       node:
         kubernetes_control_node01:
