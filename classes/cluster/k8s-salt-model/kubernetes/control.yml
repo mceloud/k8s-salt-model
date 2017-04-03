@@ -30,3 +30,11 @@ parameters:
         etcd:
           ssl:
             enabled: true
+      namespace:
+        netchecker:
+          enabled: true
+      addons:
+        netchecker:
+          enabled: true
+        helm:
+          enabled: true
