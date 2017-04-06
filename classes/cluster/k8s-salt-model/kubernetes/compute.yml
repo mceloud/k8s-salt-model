@@ -6,6 +6,11 @@ classes:
 #- system.bird.server.single
 - cluster.k8s-salt-model
 parameters:
+  docker:
+    host:
+      pkgs:
+        - docker-engine=1.12.6-0~ubuntu-xenial
+        - python-docker
   kubernetes:
     pool:
       network:
