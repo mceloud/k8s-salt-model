@@ -1,12 +1,11 @@
 classes:
 - service.etcd.server.cluster
-- system.haproxy.proxy.listen.kubernetes.etcd
 - system.haproxy.proxy.listen.kubernetes.apiserver
 - system.linux.system.repo.docker
 - system.salt.minion.cert.etcd_server
 - system.kubernetes.master.cluster
 - cluster.k8s-salt-model.kubernetes.compute
-- cluster.k8s-salt-model
+- cluster.k8s-salt-model.infra
 parameters:
   _param:
     keepalived_vip_interface: ens4
@@ -20,7 +19,7 @@ parameters:
       setup:
         calico:
           key: /calico/v1/ipam/v4/pool/${_param:calico_private_network}-${_param:calico_private_netmask}
-          value: '{"masquerade": true, "cidr": "${_param:calico_private_network}/${_param:calico_private_netmask}"}'
+          value: '{"masquerade":true,"cidr":"${_param:calico_private_network}/${_param:calico_private_netmask}"}'
   kubernetes:
     master:
       etcd:

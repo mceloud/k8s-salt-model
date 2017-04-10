@@ -1,8 +1,23 @@
 
+classes:
+- system.linux.system.single
+- system.openssh.server.team.lab
+- system.openssh.server.team.tcpcloud
+- system.openssh.server.team.mcp_qa
+- cluster.k8s-salt-model.kubernetes
 parameters:
   _param:
-    salt_api_password_hash: "$6$WV0P1shnoDh2gI/Z$22/Bcd7ffMv0jDlFpT63cAU4PiXHz9pjXwngToKwqAsgoeK4HNR3PiKaushjxp3JsQ8hNoJmAC6TxzVqfV8WH/"
-    salt_master_api_port: 8088
+
+    # infra service addresses
+    infra_config_hostname: cfg01
+    infra_config_address: 192.168.10.100
+    infra_config_deploy_address: 192.168.10.100
+
+    cluster_domain: mcp-fuel-aio.local
+    cluster_name: k8s-salt-model
+    cluster_public_host: 
+
+
   linux:
     network:
       host:
