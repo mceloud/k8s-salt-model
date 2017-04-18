@@ -6,17 +6,27 @@ k8s-salt-model Reclass Model
 config node
 ===========
 
-cfg01
+* cfg01
 
 Kubernetes control cluster
 ==========================
 
-ctl01
-ctl02
-ctl03
+* ctl01
+* ctl02
+* ctl03
 
-Kubernetes computes 
+Kubernetes computes
 ===================
 
-cmp01
-cmp02
+* cmp01
+* cmp02
+
+Proxy nodes
+===========
+
+* prx01
+
+Monitor nodes
+=============
+
+* mon01
