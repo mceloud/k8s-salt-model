@@ -8,7 +8,8 @@ classes:
 - system.reclass.storage.salt
 - system.salt.minion.cert.k8s_server
 - system.reclass.storage.system.kubernetes_control_cluster
-- cluster.virtual-mcp11-k8s-calico.infra
+- system.reclass.storage.system.opencontrail_control_cluster
+- cluster.virtual-mcp11-k8s-contrail.infra
 parameters:
   _param:
     salt_master_base_environment: prd
@@ -60,3 +61,12 @@ parameters:
             salt_master_host: ${_param:infra_config_address}
             linux_system_codename: xenial
             single_address: ${_param:kubernetes_monitor_node01_address}
+        opencontrail_control_node01:
+          params:
+            rabbitmq_cluster_role: master
+        opencontrail_control_node02:
+          params:
+            rabbitmq_cluster_role: slave
+        opencontrail_control_node03:
+          params:
+            rabbitmq_cluster_role: slave

@@ -5,6 +5,7 @@ classes:
 - system.openssh.server.team.tcpcloud
 - system.openssh.server.team.mcp_qa
 - cluster.virtual-mcp11-k8s-contrail.kubernetes
+- cluster.virtual-mcp11-k8s-contrail.opencontrail
 parameters:
   _param:
 
@@ -16,7 +17,6 @@ parameters:
     cluster_domain: virtual-mcp11-k8s-contrail.local
     cluster_name: virtual-mcp11-k8s-contrail
     cluster_public_host: 
-
 
   linux:
     network:
