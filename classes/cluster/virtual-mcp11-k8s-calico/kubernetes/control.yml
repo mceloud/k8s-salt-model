@@ -6,6 +6,7 @@ classes:
 - system.kubernetes.master.cluster
 - cluster.virtual-mcp11-k8s-calico.kubernetes.compute
 - cluster.virtual-mcp11-k8s-calico.infra
+- cluster.virtual-mcp11-k8s-calico.workshop
 parameters:
   _param:
     keepalived_vip_interface: ens4
