@@ -14,6 +14,7 @@ parameters:
     kubernetes_controller-manager_token: uXrdZ1YKF6qlYm3sHje2iEXMGAGDWOIU
     kubernetes_dns_token: 0S1I4iJeFjq5fopPwwCwTp3xFpEZfeUl
     etcd_initial_token: IN7KaRMSo3xkGxkjAAPtkRkAgqN4ZNRq
+    kubernetes_hyperkube_image: docker-prod-virtual.sandbox.mirantis.net/mirantis/kubernetes/hyperkube-amd64:v1.5.4-5
 
     # addresses and hostnames
     kubernetes_internal_api_address: 10.254.0.1
