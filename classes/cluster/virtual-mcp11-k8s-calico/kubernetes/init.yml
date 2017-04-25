@@ -94,7 +94,7 @@ parameters:
             kubernetes_services:
               address: 10.254.0.0
               netmask: 255.255.0.0
-#              gateway: ${_param:single_address}
+              gateway: ${_param:single_address}
 
 
     system:
