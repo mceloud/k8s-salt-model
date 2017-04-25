@@ -23,4 +23,4 @@ parameters:
           image: calico/cni:latest
     common:
       hyperkube:
-        image: gcr.io/google_containers/hyperkube-amd64:v1.5.4-5
+        image: gcr.io/google_containers/hyperkube-amd64:v1.5.6
